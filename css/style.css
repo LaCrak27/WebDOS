@@ -8,16 +8,22 @@
     font-size: 25px;
     background-color: black;
     color: white;
-    animation: glow 0.7s ease-in-out infinite alternate;
+    animation-name: glow, fadeIn;
+    animation-duration: .7s, 3s;
+    animation-timing-function: ease-in-out, ease-out;
+    animation-iteration-count: infinite, 1;
+    animation-direction: alternate, normal;
 }
+
 @keyframes glow {
     from {
-      text-shadow: 0 0 1px rgba(255, 255, 255, 0.25), 0 0 2px rgba(255, 255, 255, 0.25), 0 0 3px rgba(255, 255, 255, 0.25), 0 0 4px rgba(255, 255, 255, 0.25), 0 0 5px rgba(255, 255, 255, 0.25), 0 0 6px rgba(255, 255, 255, 0.25), 0 0 7px rgba(255, 255, 255, 0.25);
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.25), 0 0 2px rgba(255, 255, 255, 0.25), 0 0 3px rgba(255, 255, 255, 0.25), 0 0 4px rgba(255, 255, 255, 0.25), 0 0 5px rgba(255, 255, 255, 0.25), 0 0 6px rgba(255, 255, 255, 0.25), 0 0 7px rgba(255, 255, 255, 0.25);
     }
+
     to {
-      text-shadow: 0 0 2px rgba(255, 255, 255, 0.25), 0 0 3px rgba(255, 255, 255, 0.25), 0 0 4px rgba(255, 255, 255, 0.25), 0 0 5px rgba(255, 255, 255, 0.25), 0 0 6px rgba(255, 255, 255, 0.25), 0 0 7px rgba(255, 255, 255, 0.25), 0 0 8px rgba(255, 255, 255, 0.25);
+        text-shadow: 0 0 2px rgba(255, 255, 255, 0.25), 0 0 3px rgba(255, 255, 255, 0.25), 0 0 4px rgba(255, 255, 255, 0.25), 0 0 5px rgba(255, 255, 255, 0.25), 0 0 6px rgba(255, 255, 255, 0.25), 0 0 7px rgba(255, 255, 255, 0.25), 0 0 8px rgba(255, 255, 255, 0.25);
     }
-  }
+}
 
 @keyframes flicker {
     0% {
@@ -132,4 +138,14 @@
     z-index: 2;
     background-size: 100% 2px, 3px 100%;
     pointer-events: none;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
