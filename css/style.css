@@ -2,10 +2,10 @@
     font-family: DOSfont;
     src: url(../font/font.ttf) format('truetype');
 }
-
 .page {
     font-family: DOSfont !important;
     font-size: 25px;
+    line-height: 0.975;
     background-color: black;
     color: white;
     animation-name: glow, fadeIn;
