@@ -8,10 +8,10 @@ let fs = {
     },
     AUTOEXEC: {
         type: 'BAT',
-        contents: `@echo off
-        SET SOUND=C:\\PROGRA~1\\CREATIVE\\CTSND
-        SET BLASTER=A220 I5 D1 H5 P330 E620 T6
-        SET PATH=C:\\COMMAND.COM
+        contents: `@echo off<br>
+        SET SOUND=C:\\PROGRA~1\\CREATIVE\\CTSND<br>
+        SET BLASTER=A220 I5 D1 H5 P330 E620 T6<br>
+        SET PATH=C:\\COMMAND.COM<br>
         LH C:\\Windows\\COMMAND\\MSCDEX.EXE /D:123`
     },
     BOOT: {
@@ -34,7 +34,7 @@ let fs = {
             },
             ABOUTWEBDOS: {
                 type: 'TXT',
-                contents: 'This is a website that I originally intended to be my portfolio, similar to those console based one, but I thought that making it resemble DOS and have some of it\'s commands instead of just your basic "youtube" and "help" commands would be nice, so this is what ended up coming out of it. Made in a weekend with <3 by LaCrak27, using pure html/css/js.'
+                contents: 'This is a website that I originally intended to be my portfolio, similar to those console based ones, but I thought that making it resemble DOS and have some of it\'s commands instead of just your basic "youtube" and "help" commands would be nice, so this is what ended up coming out of it. Made in a weekend with <3 by LaCrak27, using pure html/css/js.'
             },
             SOCIALS: {
                 type: '&lt;DIR&gt;',
@@ -59,10 +59,12 @@ let fs = {
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case "Enter":
+            uc = document.getElementById("input").innerHTML;
+            ucu = uc.toUpperCase();
             args = document.getElementById("input").innerHTML.split(' ');
             uppercaseCommand = args.shift().toUpperCase();
             replacedCommand = uppercaseCommand.replaceAll('\.', "p");
-            processCommand(replacedCommand, args);
+            processCommand(replacedCommand, args, ucu);
             document.getElementById("input").innerHTML = "";
             break;
         case "Backspace":
@@ -77,7 +79,7 @@ document.addEventListener('keydown', (event) => {
     return false;
 });
 
-async function processCommand(command, args) {
+async function processCommand(command, args, uc) {
     if (command === "" || undefined) {
         document.getElementById("commands").innerHTML = document.getElementById("commands").innerHTML + "C:" + document.getElementById("path").innerHTML + ">" + "<br>";
     }
@@ -90,7 +92,7 @@ async function processCommand(command, args) {
             document.getElementById("line").style.visibility = "";
         }
         else {
-            document.getElementById("commands").innerHTML = document.getElementById("commands").innerHTML + `'${command}' is not recognized as an internal or external command, operable program or batch file.`;
+            document.getElementById("commands").innerHTML = document.getElementById("commands").innerHTML + `'${uc}' is not recognized as an internal or external command, operable program or batch file.`;
         }
         document.getElementById("commands").innerHTML = document.getElementById("commands").innerHTML + "<br><br>";
     }
@@ -169,7 +171,17 @@ function DIR(args) {
     ret = ret + "<br>" + `${fileAmount} file(s) in directory.`;
     return ret;
 }
-
+function TYPE(args) {
+    filetoSee = args[0].split(".");
+    if (getStuffInDir().includes(filetoSee[0].toUpperCase())) {
+        if (filetoSee[1] != undefined) {
+            if (getCurrentDir()[filetoSee[0].toUpperCase()].type === filetoSee[1].toUpperCase()) {
+                return getCurrentDir()[filetoSee[0].toUpperCase()].contents;
+            }
+        }
+    }
+    return `File ${args} not found.`
+}
 
 //Helper functions
 function pauseforXmiliseconds(time) {
@@ -204,8 +216,7 @@ function getCurrentDir() {
     }
     return dir;
 }
-function updateURL()
-{
+function updateURL() {
     let pathText = "";
     if (currentpath.length == 0) {
         pathText = "/";
