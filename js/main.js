@@ -1,10 +1,25 @@
 const BlinkingIntervalID = setInterval(blinker, 150);
 let currentpath = []; //Would display as \ABOUT\SOCIALS (navigating the obj directly)
+let commandsUsed = [];
+let currentCommandIndex = -1;
 //File system
 let fs = {
     COMMAND: {
         type: 'COM',
         contents: '€ú/uÆú\€> u&Æ \ \ ´:¢^@<@t"ý€> u¿Ÿ ¾ ¹ ó¤&£ ü£¢< èEø¾€ ¬ŠÈ2íãC¾ ¬< t<	t:ª'
+    },
+    HELP: {
+        type: 'TXT',
+        contents: `This is a DOS simulator for js. It works similar to how an actual DOS works. The list of commands are:<br><br>
+        DIR: Shows files and folders in the current directory.<br>
+        TYPE foo: Prints the contents of "foo" into the console.<br>
+        CD foo: Goes into directory (folder) "foo" (also use cd.. to move back a directory).<br>
+        REN foo bar: Renames file "foo" into "bar".<br>
+        COPY foo bar: Copies file "foo" into a new file named "bar".<br>
+        ECHO foo: Just prints "foo" to the screen.<br>
+        PING foo: Tries to ping host "foo" over the internet.<br>
+        CLS: Clears the screen.
+        `
     },
     AUTOEXEC: {
         type: 'BAT',
@@ -56,6 +71,16 @@ let fs = {
         }
     }
 }
+let file = {
+    type: 'TXT',
+    contents: ''
+};
+let folder = {
+    type: '&lt;DIR&gt;',
+    contents: {
+
+    }
+};
 
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
@@ -66,11 +91,19 @@ document.addEventListener('keydown', (event) => {
             uppercaseCommand = args.shift().toUpperCase();
             replacedCommand = uppercaseCommand.replaceAll('\.', "p");
             processCommand(replacedCommand, args, ucu);
+            commandsUsed.push(document.getElementById("input").innerHTML);
             document.getElementById("input").innerHTML = "";
+            currentCommandIndex = commandsUsed.length - 1;
             break;
         case "Backspace":
             document.getElementById("input").innerHTML = document.getElementById("input").innerHTML.slice(0, -1); //Removes last keystroke. 
             break;
+        case "ArrowUp":
+            if (commandsUsed[currentCommandIndex] != undefined) {
+                document.getElementById("input").innerHTML = commandsUsed[currentCommandIndex];
+                currentCommandIndex--;
+                window.scrollTo(0, document.body.scrollHeight);
+            }
         default:
             if (event.metaKey || event.altKey || event.ctrlKey) break;
             if (event.key.length > 1) break; //Prevent keys like CapsLock from registering
@@ -206,6 +239,27 @@ function REN(args) {
         }
     }
 }
+function COPY(args) {
+    if (args.length != 2) {
+        return "Command structure: COPY FileToCopyFrom NewFileName (no extensions)";
+    }
+    else {
+        oldName = args[0].toUpperCase();
+        newName = args[1].toUpperCase();
+        if (getStuffInDir().includes(oldName) && (getStuffInDir().includes(newName) == false)) {
+            if (getCurrentDir()[oldName].type != '&lt;DIR&gt;') {
+                copy(oldName, newName);
+                return "File copied succesfully.";
+            }
+            else {
+                return `File ${oldName} was not found.`;
+            }
+        }
+        else {
+            return `File ${oldName} was not found or file ${newName} already exists in directory.`;
+        }
+    }
+}
 
 //Helper functions
 function pauseforXmiliseconds(time) {
@@ -251,10 +305,9 @@ function updateURL() {
     window.history.pushState({}, getCurrentDir(), pathText);
 }
 function rename(oldName, newName) {
-
-    // Assign new key
     getCurrentDir()[newName] = getCurrentDir()[oldName];
-
-    // Delete old key
     delete getCurrentDir()[oldName];
+}
+function copy(fileToCopyFrom, newFileName) {
+    getCurrentDir()[newFileName] = getCurrentDir()[fileToCopyFrom];
 }
