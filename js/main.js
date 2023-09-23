@@ -56,15 +56,6 @@ let fs = {
         }
     }
 }
-document.addEventListener('click', (event) => {
-    document.getElementById("page").focus();
-    document.getElementById("page").click();
-});
-document.addEventListener('touchstart', (event) => {
-    document.getElementById("page").focus();
-    document.getElementById("page").click();
-});
-document.body.ontouchend = function() { document.getElementById("page").focus(); };
 
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
