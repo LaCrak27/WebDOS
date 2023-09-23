@@ -20,9 +20,9 @@ let fs = {
     },
     CONFIG: {
         type: 'SYS',
-        contents: `DOS=HIGH,UMB
-        FILES=30
-        STACKS=0,0
+        contents: `DOS=HIGH,UMB<br>
+        FILES=30<br>
+        STACKS=0,0<br>
         BUFFERS=20`
     },
     ABOUT: {
@@ -30,7 +30,7 @@ let fs = {
         contents: {
             ABOUTME: {
                 type: 'TXT',
-                contents: 'My name\'s Ivan, and I\'m a 17yo programmer from spain. Im studying software engineering at the moment, and working on several said projects... (to be finished lmao)'
+                contents: 'My name\'s Ivan, and I\'m a 17yo developer from spain. Im studying software engineering at the moment, and working on several side projects, as well as in my game Star Strike (you can learn more at www.starstrikegame.com). I really am down to code just anything, as I\'m comfortable with most languages (except python, fuck python) so if you have anything you need, don\'t hesitate to contact me! (check SOCIALS folder).'
             },
             ABOUTWEBDOS: {
                 type: 'TXT',
@@ -115,9 +115,6 @@ function ECHO(args) {
     });
     return s;
 }
-function CD() {
-
-}
 async function PING(args) {
     host = args[0];
     await pauseforXmiliseconds(getRandomInt(3000));
@@ -132,7 +129,7 @@ function CD(args) {
         return "Please specify the directory to move into."
     }
     else {
-        folderToMoveTo = args[0].toUpperCase();
+        let folderToMoveTo = args[0].toUpperCase();
         if (folderToMoveTo == `..`) {
             CDpp();
             return "";
@@ -141,8 +138,13 @@ function CD(args) {
             return "";
         }
         if (getStuffInDir().includes(folderToMoveTo)) {
-            currentpath.push(folderToMoveTo);
-            return "";
+            if (getCurrentDir()[folderToMoveTo].type === '&lt;DIR&gt;') {
+                currentpath.push(folderToMoveTo);
+                return "";
+            }
+            else {
+                return "Unable to change to: " + args[0];
+            }
         }
         else {
             return "Unable to change to: " + args[0];
