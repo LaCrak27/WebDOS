@@ -134,7 +134,7 @@ function CD(args) {
         if (folderToMoveTo == `..`) {
             CDpp();
             return "";
-        }   
+        }
         if (folderToMoveTo == `.`) {
             return "";
         }
@@ -185,6 +185,27 @@ function TYPE(args) {
     }
     return `File ${args} not found.`
 }
+function REN(args) {
+    if (args.length != 2) {
+        return "Command structure: REN FileToRename NewName (no extensions)";
+    }
+    else {
+        oldName = args[0].toUpperCase();
+        newName = args[1].toUpperCase();
+        if (getStuffInDir().includes(oldName)) {
+            if (getCurrentDir()[oldName].type != '&lt;DIR&gt;') {
+                rename(oldName, newName);
+                return "Renamed Succesfully";
+            }
+            else {
+                return `File ${oldName} was not found.`;
+            }
+        }
+        else {
+            return `File ${oldName} was not found.`;
+        }
+    }
+}
 
 //Helper functions
 function pauseforXmiliseconds(time) {
@@ -228,4 +249,12 @@ function updateURL() {
         pathText = pathText + "/" + folder.toUpperCase();
     });
     window.history.pushState({}, getCurrentDir(), pathText);
+}
+function rename(oldName, newName) {
+
+    // Assign new key
+    getCurrentDir()[newName] = getCurrentDir()[oldName];
+
+    // Delete old key
+    delete getCurrentDir()[oldName];
 }
