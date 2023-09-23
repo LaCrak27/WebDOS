@@ -56,6 +56,13 @@ let fs = {
         }
     }
 }
+document.addEventListener('click', (event) => {
+    document.getElementById("page").focus();
+});
+document.addEventListener('touchstart', (event) => {
+    document.getElementById("page").focus();
+});
+
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case "Enter":
@@ -133,7 +140,7 @@ function CD(args) {
         if (folderToMoveTo == `..`) {
             CDpp();
             return "";
-        }
+        }   
         if (folderToMoveTo == `.`) {
             return "";
         }
