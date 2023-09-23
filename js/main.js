@@ -4,18 +4,60 @@ let commandsUsed = [];
 let currentCommandIndex = -1;
 //File system
 let fs = {
+    ABOUT: {
+        type: '&lt;DIR&gt;',
+        contents: {
+            SOCIALS: {
+                type: '&lt;DIR&gt;',
+                contents: {
+                    GITHUB: {
+                        type: 'TXT',
+                        contents: 'https://github.com/LaCrak27'
+                    },
+                    DISCORD: {
+                        type: 'TXT',
+                        contents: 'Talk to me on discord! My username is "lacrak27".'
+                    },
+                    YOUTUBE: {
+                        type: 'TXT',
+                        contents: 'https://www.youtube.com/channel/UCz1Vf9qmV1rpmzDvKf3WptQ'
+                    }
+                }
+            },
+            ABOUTME: {
+                type: 'TXT',
+                contents: 'My name\'s Ivan, and I\'m a 17yo developer from spain. Im studying software engineering at the moment, and working on several side projects, as well as in my game Star Strike (you can learn more at www.starstrikegame.com). I really am down to code just anything, as I\'m comfortable with most languages (except python, fuck python) so if you have anything you need, don\'t hesitate to contact me! (check SOCIALS folder).'
+            },
+            ABOUTWEBDOS: {
+                type: 'TXT',
+                contents: 'This is a website that I originally intended to be my portfolio, similar to those console based ones, but I thought that making it resemble DOS and have some of it\'s commands instead of just your basic "youtube" and "help" commands would be nice, so this is what ended up coming out of it. Made in a weekend with <3 by LaCrak27, using pure html/css/js.'
+            }
+        }
+    },
+    WINDOWS: {
+        type: '&lt;DIR&gt;',
+        contents: {
+
+        }
+    },
     COMMAND: {
         type: 'COM',
         contents: '€ú/uÆú\€> u&Æ \ \ ´:¢^@<@t"ý€> u¿Ÿ ¾ ¹ ó¤&£ ü£¢< èEø¾€ ¬ŠÈ2íãC¾ ¬< t<	t:ª'
     },
     HELP: {
         type: 'TXT',
-        contents: `This is a DOS simulator for js. It works similar to how an actual DOS works. The list of commands are:<br><br>
+        contents: `This is a DOS simulator for js. It works similar to how an actual DOS works.<br>
+        (All commands are case insensitive, just like in DOS)<br>
+        Available commands are:<br><br>
         DIR: Shows files and folders in the current directory.<br>
         TYPE foo: Prints the contents of "foo" into the console.<br>
         CD foo: Goes into directory (folder) "foo" (also use cd.. to move back a directory).<br>
         REN foo bar: Renames file "foo" into "bar".<br>
         COPY foo bar: Copies file "foo" into a new file named "bar".<br>
+        ERASE foo: Deletes file "foo".<br>
+        RMDIR foo: Deltes directory "foo" and all its contents.<br>
+        MKDIR foo: Makes a new directory with name "FOO".<br>
+        MKFILE foo: Makes a new TXT file with name "FOO".<br>
         ECHO foo: Just prints "foo" to the screen.<br>
         PING foo: Tries to ping host "foo" over the internet.<br>
         CLS: Clears the screen.
@@ -39,36 +81,6 @@ let fs = {
         FILES=30<br>
         STACKS=0,0<br>
         BUFFERS=20`
-    },
-    ABOUT: {
-        type: '&lt;DIR&gt;',
-        contents: {
-            ABOUTME: {
-                type: 'TXT',
-                contents: 'My name\'s Ivan, and I\'m a 17yo developer from spain. Im studying software engineering at the moment, and working on several side projects, as well as in my game Star Strike (you can learn more at www.starstrikegame.com). I really am down to code just anything, as I\'m comfortable with most languages (except python, fuck python) so if you have anything you need, don\'t hesitate to contact me! (check SOCIALS folder).'
-            },
-            ABOUTWEBDOS: {
-                type: 'TXT',
-                contents: 'This is a website that I originally intended to be my portfolio, similar to those console based ones, but I thought that making it resemble DOS and have some of it\'s commands instead of just your basic "youtube" and "help" commands would be nice, so this is what ended up coming out of it. Made in a weekend with <3 by LaCrak27, using pure html/css/js.'
-            },
-            SOCIALS: {
-                type: '&lt;DIR&gt;',
-                contents: {
-                    GITHUB: {
-                        type: 'TXT',
-                        contents: 'https://github.com/LaCrak27'
-                    },
-                    DISCORD: {
-                        type: 'TXT',
-                        contents: 'Talk to me on discord! My username is "lacrak27".'
-                    },
-                    YOUTUBE: {
-                        type: 'TXT',
-                        contents: 'https://www.youtube.com/channel/UCz1Vf9qmV1rpmzDvKf3WptQ'
-                    }
-                }
-            }
-        }
     }
 }
 let file = {
@@ -104,6 +116,14 @@ document.addEventListener('keydown', (event) => {
                 currentCommandIndex--;
                 window.scrollTo(0, document.body.scrollHeight);
             }
+            break;
+        case "ArrowDown":
+            if (commandsUsed[currentCommandIndex] != undefined) {
+                document.getElementById("input").innerHTML = commandsUsed[currentCommandIndex];
+                currentCommandIndex++;
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+            break;
         default:
             if (event.metaKey || event.altKey || event.ctrlKey) break;
             if (event.key.length > 1) break; //Prevent keys like CapsLock from registering
@@ -150,6 +170,9 @@ function ECHO(args) {
     return s;
 }
 async function PING(args) {
+    if (args.length != 1) {
+        return "Command structure: PING host";
+    }
     host = args[0];
     await pauseforXmiliseconds(getRandomInt(3000));
     return `Ping request could not find host ${host}. Please check the name and try again.`;
@@ -172,6 +195,7 @@ function CD(args) {
             return "";
         }
         if (getStuffInDir().includes(folderToMoveTo)) {
+            if (folderToMoveTo == 'WINDOWS') return "Access Denied";
             if (getCurrentDir()[folderToMoveTo].type === '&lt;DIR&gt;') {
                 currentpath.push(folderToMoveTo);
                 return "";
@@ -208,6 +232,9 @@ function DIR(args) {
     return ret;
 }
 function TYPE(args) {
+    if (args.length != 1) {
+        return "Command structure: TYPE FileToSee.EXTENSION";
+    }
     filetoSee = args[0].split(".");
     if (getStuffInDir().includes(filetoSee[0].toUpperCase())) {
         if (filetoSee[1] != undefined) {
@@ -260,6 +287,76 @@ function COPY(args) {
         }
     }
 }
+function ERASE(args) {
+    if (args.length != 1) {
+        return "Command structure: ERASE FileToErase (no extensions)";
+    }
+    else {
+        fileToErase = args[0].toUpperCase();
+        if (getStuffInDir().includes(fileToErase)) {
+            if (getCurrentDir()[fileToErase].type != '&lt;DIR&gt;') {
+                deleteFile(fileToErase);
+                return "File deleted succesfully.";
+            }
+            else {
+                return `File ${fileToErase} was not found.`;
+            }
+        }
+        else {
+            return `File ${fileToErase} was not found.`;
+        }
+    }
+}
+function RMDIR(args) {
+    if (args.length != 1) {
+        return "Command structure: RMDIR DirectoryToErase";
+    }
+    else {
+        dirToErase = args[0].toUpperCase();
+        if (getStuffInDir().includes(dirToErase)) {
+            if (getCurrentDir()[dirToErase].type === '&lt;DIR&gt;') {
+                deleteFile(dirToErase);
+                return "Directory deleted succesfully.";
+            }
+            else {
+                return `Directory ${dirToErase} was not found.`;
+            }
+        }
+        else {
+            return `Directory ${dirToErase} was not found.`;
+        }
+    }
+}
+function MKFILE(args) {
+    if (args.length != 1) {
+        return "Command structure: MKFILE NewFileName";
+    }
+    newFileName = args[0].toUpperCase();
+    if (getStuffInDir().includes(newFileName)) {
+        return `File ${newFileName} already exists on current directory.`;
+    }
+    else {
+        createFile(newFileName);
+        return "File created succesfully."
+    }
+}
+function MKDIR(args) {
+    if (args.length != 1) {
+        return "Command structure: MKDIR NewDirectoryName";
+    }
+    newDirName = args[0].toUpperCase();
+    if (currentpath.includes(newDirName)){
+        return "Unknown error occured, please try with a different dir name."
+    }
+    if (getStuffInDir().includes(newDirName)) {
+        return `Directory ${newDirName} already exists on current directory.`;
+    }
+    else {
+        createDir(newDirName);
+        return "Directory created succesfully."
+    }
+}
+
 
 //Helper functions
 function pauseforXmiliseconds(time) {
@@ -310,4 +407,16 @@ function rename(oldName, newName) {
 }
 function copy(fileToCopyFrom, newFileName) {
     getCurrentDir()[newFileName] = getCurrentDir()[fileToCopyFrom];
+}
+function deleteFile(fileToDelete) {
+    delete getCurrentDir()[fileToDelete];
+}
+function createFile(newFileName) {
+    let tempObj = JSON.parse(JSON.stringify(file)); //Weird ass clone creating tech, need it so that the clone doesn't affect the new folder
+    getCurrentDir()[newFileName] = tempObj;
+}
+function createDir(newDirName) {
+    let tempObj = JSON.parse(JSON.stringify(folder));
+    getCurrentDir()[newDirName] = tempObj;
+    console.log(fs);
 }
