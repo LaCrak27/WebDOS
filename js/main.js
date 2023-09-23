@@ -192,7 +192,7 @@ function REN(args) {
     else {
         oldName = args[0].toUpperCase();
         newName = args[1].toUpperCase();
-        if (getStuffInDir().includes(oldName)) {
+        if (getStuffInDir().includes(oldName) && (getStuffInDir().includes(newName) == false)) {
             if (getCurrentDir()[oldName].type != '&lt;DIR&gt;') {
                 rename(oldName, newName);
                 return "Renamed Succesfully";
@@ -202,7 +202,7 @@ function REN(args) {
             }
         }
         else {
-            return `File ${oldName} was not found.`;
+            return `File ${oldName} was not found or file ${newName} already exists in directory.`;
         }
     }
 }
