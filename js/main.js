@@ -135,8 +135,8 @@ document.addEventListener('keydown', (event) => {
     }
     return false;
 });
-document.addEventListener('touchstart', (e) => {
-    document.getElementById("hfield").click();
+document.addEventListener("touchstart", (e)  => {
+    document.getElementById("hfield").focus();
     e.preventDefault();
 })
 
