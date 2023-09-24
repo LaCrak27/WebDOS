@@ -341,7 +341,7 @@ function MKFILE(args) {
     }
     newFileName = args[0].toUpperCase();
     if(newFileName.length > 20) {
-        return "New directory name too large."
+        return "New file name too large."
     }
     if (getStuffInDir().includes(newFileName)) {
         return `File ${newFileName} already exists on current directory.`;
