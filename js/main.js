@@ -135,6 +135,9 @@ document.addEventListener('keydown', (event) => {
     }
     return false;
 });
+document.addEventListener('ontouchstart', (e) => {
+    document.getElementById("hfield").click();
+})
 
 async function processCommand(command, args, uc) {
     if (command === "" || undefined) {
