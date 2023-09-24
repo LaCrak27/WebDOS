@@ -340,7 +340,7 @@ function MKFILE(args) {
         return "Command structure: MKFILE NewFileName";
     }
     newFileName = args[0].toUpperCase();
-    if(newFileName.length > 20) {
+    if(newFileName.length > 10) {
         return "New file name too large."
     }
     if (getStuffInDir().includes(newFileName)) {
@@ -356,7 +356,7 @@ function MKDIR(args) {
         return "Command structure: MKDIR NewDirectoryName";
     }
     newDirName = args[0].toUpperCase();
-    if(newDirName.length > 20) {
+    if(newDirName.length > 10) {
         return "New directory name too large."
     }
     if (currentpath.includes(newDirName)) {
