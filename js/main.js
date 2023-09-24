@@ -118,6 +118,7 @@ document.addEventListener('keydown', (event) => {
                 currentCommandIndex--;
                 window.scrollTo(0, document.body.scrollHeight);
             }
+            event.preventDefault();
             break;
         case "ArrowDown":
             if (commandsUsed[currentCommandIndex] != undefined) {
