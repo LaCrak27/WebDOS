@@ -137,6 +137,7 @@ document.addEventListener('keydown', (event) => {
 });
 document.addEventListener('ontouchstart', (e) => {
     document.getElementById("hfield").click();
+    document.getElementById("hfield").focus();
 })
 
 async function processCommand(command, args, uc) {
