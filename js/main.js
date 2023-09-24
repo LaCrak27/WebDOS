@@ -138,6 +138,7 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener("touchstart", (e)  => {
     document.getElementById("hfield").focus();
     document.getElementById("hfield").click();
+    e.preventDefault();
 })
 
 async function processCommand(command, args, uc) {
