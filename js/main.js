@@ -58,9 +58,11 @@ let fs = {
         RMDIR foo: Deltes directory "foo" and all its contents.<br>
         MKDIR foo: Makes a new directory with name "FOO".<br>
         MKFILE foo: Makes a new TXT file with name "FOO".<br>
+        EDIT foo bar lorem: Editing files, type EDIT and press enter for more help.<br>
         ECHO foo: Just prints "foo" to the screen.<br>
         PING foo: Tries to ping host "foo" over the internet.<br>
-        CLS: Clears the screen.
+        CLS: Clears the screen.<br>
+        DOWN foo: Downloads file foo.
         `
     },
     AUTOEXEC: {
@@ -366,9 +368,14 @@ function EDIT(args) {
         if (action === 'REM') {
             if (isNumeric(args[0])) {
                 if (getStuffInDir().includes(FileName)) {
-                    for (let i = 0; i < args[0]; i++) {
-                        getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents.slice(0, -1);//For loop here to prevent out of bounds exception
-                        return "Operation completed succesfully";
+                    if (getCurrentDir()[fileName].type != '&lt;DIR&gt;') {
+                        for (let i = 0; i < args[0]; i++) {
+                            getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents.slice(0, -1);//For loop here to prevent out of bounds exception
+                            return "Operation completed succesfully";
+                        }
+                    }
+                    else {
+                        return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
                     }
                 }
             }
@@ -378,16 +385,35 @@ function EDIT(args) {
         }
         if (action === 'ADD') {
             if (getStuffInDir().includes(FileName)) {
-                stuffToAdd = ""
-                args.forEach(word => {
-                    stuffToAdd = stuffToAdd + word + " ";
-                });
-                getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents + stuffToAdd;
-                return "Operation completed succesfully";
+                if (getCurrentDir()[fileName].type != '&lt;DIR&gt;') {
+                    stuffToAdd = ""
+                    args.forEach(word => {
+                        stuffToAdd = stuffToAdd + word + " ";
+                    });
+                    getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents + stuffToAdd;
+                    return "Operation completed succesfully";
+                }
+                else {
+                    return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
+                }
             }
         }
     }
     return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
+}
+function DOWN(args) {
+    if (args.length != 1) {
+        return "Command structure: DOWN FileToDownload (no extensions).";
+    }
+    else {
+        if (getStuffInDir().includes(args[0].toUpperCase())) {
+            downloadFile(getCurrentDir()[args[0].toUpperCase()].contents, args[0].toUpperCase(), getCurrentDir()[args[0].toUpperCase()].type)
+            return "Downloading...";
+        }
+        else {
+            return "File could not be found.";
+        }
+    }
 }
 
 
@@ -456,12 +482,12 @@ function createDir(newDirName) {
 const isNumeric = value =>
     value.length !== 0 && [...value].every(c => c >= '0' && c <= '9');
 
-const downloadFile = () => {
+const downloadFile = (fileContent, fileName, fileExtension) => {
     const link = document.createElement("a");
-    const content = document.querySelector("textarea").value;
+    const content = fileContent;
     const file = new Blob([content], { type: 'text/plain' });
     link.href = URL.createObjectURL(file);
-    link.download = "sample.txt";
+    link.download = `${fileName}.${fileExtension}`;
     link.click();
     URL.revokeObjectURL(link.href);
 };
