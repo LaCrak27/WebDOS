@@ -340,6 +340,9 @@ function MKFILE(args) {
         return "Command structure: MKFILE NewFileName";
     }
     newFileName = args[0].toUpperCase();
+    if(newFileName.length > 20) {
+        return "New directory name too large."
+    }
     if (getStuffInDir().includes(newFileName)) {
         return `File ${newFileName} already exists on current directory.`;
     }
@@ -353,6 +356,9 @@ function MKDIR(args) {
         return "Command structure: MKDIR NewDirectoryName";
     }
     newDirName = args[0].toUpperCase();
+    if(newDirName.length > 20) {
+        return "New directory name too large."
+    }
     if (currentpath.includes(newDirName)) {
         return "Unknown error occured, please try with a different dir name."
     }
