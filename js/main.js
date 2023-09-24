@@ -345,7 +345,7 @@ function MKDIR(args) {
         return "Command structure: MKDIR NewDirectoryName";
     }
     newDirName = args[0].toUpperCase();
-    if (currentpath.includes(newDirName)){
+    if (currentpath.includes(newDirName)) {
         return "Unknown error occured, please try with a different dir name."
     }
     if (getStuffInDir().includes(newDirName)) {
@@ -355,6 +355,39 @@ function MKDIR(args) {
         createDir(newDirName);
         return "Directory created succesfully."
     }
+}
+function EDIT(args) {
+    if (args.length < 3) {
+        return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
+    }
+    else {
+        action = args.shift().toUpperCase();
+        FileName = args.shift().toUpperCase();
+        if (action === 'REM') {
+            if (isNumeric(args[0])) {
+                if (getStuffInDir().includes(FileName)) {
+                    for (let i = 0; i < args[0]; i++) {
+                        getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents.slice(0, -1);//For loop here to prevent out of bounds exception
+                        return "Operation completed succesfully";
+                    }
+                }
+            }
+            else {
+                return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
+            }
+        }
+        if (action === 'ADD') {
+            if (getStuffInDir().includes(FileName)) {
+                stuffToAdd = ""
+                args.forEach(word => {
+                    stuffToAdd = stuffToAdd + word + " ";
+                });
+                getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents + stuffToAdd;
+                return "Operation completed succesfully";
+            }
+        }
+    }
+    return "Command structure: EDIT ADD FileToEdit StringToAdd.<br>EDIT REM FileToEdit NumberOfCharactersToErase (no extensions) (use <br> for line breaks).";
 }
 
 
@@ -420,3 +453,15 @@ function createDir(newDirName) {
     getCurrentDir()[newDirName] = tempObj;
     console.log(fs);
 }
+const isNumeric = value =>
+    value.length !== 0 && [...value].every(c => c >= '0' && c <= '9');
+
+const downloadFile = () => {
+    const link = document.createElement("a");
+    const content = document.querySelector("textarea").value;
+    const file = new Blob([content], { type: 'text/plain' });
+    link.href = URL.createObjectURL(file);
+    link.download = "sample.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+};
