@@ -380,7 +380,7 @@ function EDIT(args) {
         if (action === 'REM') {
             if (isNumeric(args[0])) {
                 if (getStuffInDir().includes(FileName)) {
-                    if (getCurrentDir()[fileName].type != '&lt;DIR&gt;') {
+                    if (getCurrentDir()[FileName].type != '&lt;DIR&gt;') {
                         for (let i = 0; i < args[0]; i++) {
                             getCurrentDir()[FileName].contents = getCurrentDir()[FileName].contents.slice(0, -1);//For loop here to prevent out of bounds exception
                             return "Operation completed succesfully";
@@ -397,7 +397,7 @@ function EDIT(args) {
         }
         if (action === 'ADD') {
             if (getStuffInDir().includes(FileName)) {
-                if (getCurrentDir()[fileName].type != '&lt;DIR&gt;') {
+                if (getCurrentDir()[FileName].type != '&lt;DIR&gt;') {
                     stuffToAdd = ""
                     args.forEach(word => {
                         stuffToAdd = stuffToAdd + word + " ";
